@@ -19,15 +19,3 @@ Kernel.send :define_method, :describe do |*args, &block|
   Ackee::Description.new(args.join(' '), &block).run
 end  
 
-# ====================================================================== 
-#  Example
-# ======================================================================
- 
-describe Hash, "literal" do
-  puts "inside of description"
-  
-  it "{} should return an empty hash" do
-    puts "inside of an it example"
-  end
-end
-
