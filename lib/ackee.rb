@@ -1,11 +1,17 @@
 module Ackee
   class Description
     def initialize(name, &block)
-      @name = name
-      @block = block
+      @name    = name
+      @befores = []
+      @block   = block
     end
 
+    def before(&block)
+      @befores << block
+    end    
+
     def it(name, &spec)
+      @befores.each { |block| instance_eval(&block)}
       instance_eval(&spec)
     end
         
