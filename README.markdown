@@ -15,7 +15,6 @@ An quick tour.
       it " true == false should fails" do
         true.should.be false
       end  
-     
       
       it " 0/0 should fails" do
         0/0
