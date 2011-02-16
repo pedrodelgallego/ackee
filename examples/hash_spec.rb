@@ -7,7 +7,6 @@ describe Hash, "literal" do
 
   it "a pending example"
 
-
   it " true == false should fails" do
     true.should.be false
   end  
