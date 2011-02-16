@@ -7,6 +7,16 @@ describe Hash, "literal" do
 
   it "a pending example"
 
+
+  it " true == false should fails" do
+    true.should.be false
+  end  
+
+  
+  it " 0/0 should fails" do
+    0/0
+  end  
+
   it "{} should return an empty hash" do
     @hash.size.should.be 0
     @hash.should.be({})

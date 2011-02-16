@@ -14,19 +14,27 @@ module Ackee
     def before(&block);  @befores << block;  end    
     def after(&block);   @afters  << block;  end
 
-    class PendingExampleError < Exception ; end
+    class PendingExampleError < Exception ; end    
     
-    def it(name, &spec)
+    def it(name, &spec)      
+      @befores.each { |block| instance_eval(&block)}
       begin
         raise PendingExampleError if !block_given?
-        @befores.each { |block| instance_eval(&block)}
-        instance_eval(&spec)      
-        @afters.each  { |block| instance_eval(&block)}
+        instance_eval(&spec)
+        puts "#{@name} -- #{name} ".green
+        @stats[:success] += 1
       rescue PendingExampleError        
         puts "#{name} is still pending ".yellow
         @stats[:pending] += 1
       rescue Object => e
-        puts "#{e.inspect}"
+        error = ""
+        e.backtrace.find_all { |line| line !~ /ackee|\/ackee\.rb:\d+/ }. each_with_index { |line, i|
+            error << "\t#{line}\n"
+        }
+        puts "#{@name} -- #{name}\n #{error}".red
+        @stats[:fails]   += 1
+      ensure        
+        @afters.each  { |block| instance_eval(&block)}
       end
     end
         
@@ -34,8 +42,23 @@ module Ackee
       instance_eval(&@block)
     end
   end
-
+  
+  module Matchers
+    def equal(arg)
+      result = @not ? @object != arg :  @object == arg
+      raise Exception unless result      
+    end
+        
+    def have(number)
+      result = @not ? @object.size != number :  @object.size == number
+      raise Exception unless result
+      self
+    end
+  end
+  
   class Should
+    include Ackee::Matchers
+    
     def initialize(object)
       @object = object
       @not    = false
@@ -49,14 +72,12 @@ module Ackee
     def be(arg=nil)
       arg.nil? ? self :  equal(arg)
     end
-
-    def equal(arg)
-      result = @not ? @object != arg :  @object == arg
-      raise Exception unless result        
-    end
-    
     alias a  be
-    alias an be    
+    alias an be
+
+    # we want the dsl to be as fluent as possible
+    # but not sure how good idea is this
+    def method_missing(*args);  self;  end    
   end  
 end
 
