@@ -5,13 +5,14 @@ describe Hash, "literal" do
 
   before do
     puts "inside of before"
+    @name = "Pedro Del Gallego"
   end
     
   it "an example" do
-    puts "inside of an example"
+    puts "inside of an example name #{@name}"
   end
   
   it "another example" do
     puts "inside of anohter example"
-  end
+  end  
 end
