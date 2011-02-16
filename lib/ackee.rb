@@ -5,30 +5,29 @@ module Ackee
   class Description
     def initialize(name, &block)
       @name    = name
-      @befores = []
-      @afters  = []
       @block   = block
+      @befores = @afters  = []
       @stats   = {:pending => 0, :success => 0, :fails => 0}
     end
 
     def before(&block);  @befores << block;  end    
     def after(&block);   @afters  << block;  end
-
-    class PendingExampleError < Exception ; end    
     
     def it(name, &spec)      
       @befores.each { |block| instance_eval(&block)}
-      begin
-        raise PendingExampleError if !block_given?
-        instance_eval(&spec)
-        puts "#{@name} -- #{name} ".green
-        @stats[:success] += 1
-      rescue PendingExampleError        
-        puts "#{name} is still pending ".yellow
+      
+      if !block_given?
+        puts "#{name} is still pending.".yellow
         @stats[:pending] += 1
+      end
+      
+      begin      
+        instance_eval(&spec)
+        puts "#{@name} -- #{name}.".green
+        @stats[:success] += 1
       rescue Object => e
         error = ""
-        e.backtrace.find_all { |line| line !~ /ackee|\/ackee\.rb:\d+/ }. each_with_index { |line, i|
+        e.backtrace.find_all { |line| line !~ /ackee|\/ackee\.rb:\d+/ }. each { |line|
             error << "\t#{line}\n"
         }
         puts "#{@name} -- #{name}\n #{error}".red
