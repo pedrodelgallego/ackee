@@ -7,7 +7,11 @@ describe Hash, "literal" do
     puts "inside of before"
     @name = "Pedro Del Gallego"
   end
-    
+
+  after do
+    puts "inside of after"
+  end
+  
   it "an example" do
     puts "inside of an example name #{@name}"
   end
