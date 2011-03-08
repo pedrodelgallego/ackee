@@ -25,20 +25,20 @@ module Ackee
       if !block_given?
         puts "#{name} is still pending.".yellow
         @stats[:pending] += 1
-      end
-      
-      begin      
-        instance_eval(&spec)
-        puts "#{@name} -- #{name}.".green
-        @stats[:success] += 1
-      rescue Object => e
-        error = e.backtrace.find_all { |line| line !~ /ackee|\/ackee\.rb:\d+/ }.inject("") do |msg, line| 
+      else      
+        begin      
+          instance_eval(&spec)
+          puts "#{@name} -- #{name}.".green
+          @stats[:success] += 1
+        rescue Object => e
+          error = e.backtrace.find_all { |line| line !~ /ackee|\/ackee\.rb:\d+/ }.inject("") do |msg, line| 
             "\t#{line}\n"
+          end
+          puts "#{@name} -- #{name}\n #{error}".red
+          @stats[:fails]   += 1
+        ensure        
+          @afters.each  { |block| instance_eval(&block)}
         end
-        puts "#{@name} -- #{name}\n #{error}".red
-        @stats[:fails]   += 1
-      ensure        
-        @afters.each  { |block| instance_eval(&block)}
       end
     end
         
