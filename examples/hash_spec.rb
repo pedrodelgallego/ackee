@@ -10,7 +10,6 @@ describe Hash, "literal" do
   it " true == false should fails" do
     true.should.be false
   end  
-
   
   it " 0/0 should fails" do
     0/0
@@ -26,10 +25,12 @@ describe Hash, "literal" do
     @hash.should.not.be({})
     @hash.should.have(1).element
   end
-  
+
+  # TODO finish this at home guys
   it "checks duplicated keys on initialization" do
     h = {:foo => :bar, :foo => :foo}
-    h.keys.size.should == 1
+    h.keys.size.should == 2
     h.should == {:foo => :foo}
   end
+  
 end
