@@ -69,11 +69,7 @@ module Ackee
       arg.nil? ? self :  equal(arg)
     end
     alias a  be
-    alias an be
-
-    # we want the dsl to be as fluent as possible
-    # but not sure how good idea is this
-    def method_missing(*args);  self;  end    
+    alias an be    
   end  
 end
 

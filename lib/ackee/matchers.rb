@@ -16,7 +16,7 @@ module Ackee
   # == Custom Matchers
   #
   # When you find that none of the stock Expectation Matchers provide a natural
-  # feeling expectation, you can very easily write your own using RSpec's matcher
+  # feeling expectation, you can very easily write your own using Ackee's matcher
   # DSL or writing one from scratch.
   #
   # module Matchers
@@ -25,7 +25,8 @@ module Ackee
   #     raise Exception unless result
   #     self
   #   end
-  # end  
+  # end
+  
   module Matchers
     # Passes if actual and expected are the same object (object identity).
     #
@@ -43,7 +44,18 @@ module Ackee
     def have(number)
       result = @not ? @object.size != number :  @object.size == number
       raise Exception unless result
-      self
+      Ackee::BlankObject.new
     end
+    
   end
+
+  # A handy object that can be use when we need to go the extra mile.
+  # == Example.
+  # 
+  #   @classroom.should.have(5).smart.students
+  class BlankObject    
+    # Not sure if this idea is good or just a dangerous hack
+    def method_missing(*args);  self;  end    
+  end
+
 end

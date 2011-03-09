@@ -22,15 +22,8 @@ describe Hash, "literal" do
 
   it "should store elements" do
     @hash[:hello] = "hola"
-    @hash.should.not.be({})
-    @hash.should.have(1).element
+    @hash.should.not.be({})    
+    @hash.should.have(1).element    
   end
 
-  # TODO finish this at home guys
-  it "checks duplicated keys on initialization" do
-    h = {:foo => :bar, :foo => :foo}
-    h.keys.size.should == 2
-    h.should == {:foo => :foo}
-  end
-  
 end
